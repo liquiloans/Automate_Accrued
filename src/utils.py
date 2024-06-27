@@ -16,7 +16,7 @@ def process_data_chunks(main_data_path, additional_data_path, chunk_size=50000):
         pivot_df = chunk.pivot_table(index='CID', columns='MONTH_YEAR', values=columns_to_unstack, aggfunc='sum').fillna(0)
         pivot_df.columns = [f'{col[0]}_{col[1]}' for col in pivot_df.columns]
 
-        data_to_keep = chunk[columns_to_keep].set_index('CID')
+        data_to_keep = chunk[columns_to_keep].drop_duplicates(subset='CID').set_index('CID')
         merged_chunk = data_to_keep.join(pivot_df, how='outer')
         chunk_list.append(merged_chunk)
 

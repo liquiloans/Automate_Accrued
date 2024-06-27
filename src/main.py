@@ -9,14 +9,14 @@ def main():
     # Process data in chunks
     final_df = process_data_chunks(main_data_path, additional_data_path)
 
-    
+    # Identify the current and next month dynamically
     additional_columns = [col for col in final_df.columns if col.startswith('WNPI_') or col.startswith('RATE_') or col.startswith('COM_')]
     last_rate_column = [col for col in additional_columns if col.startswith('RATE_')][-1]
     current_month_str = last_rate_column.split('_')[-1]
     next_month = datetime.strptime(current_month_str, '%Y%m') + timedelta(days=31)
     next_month_str = next_month.strftime('%Y%m')
 
-    
+    # Add the next month RATE column and apply conditions to update it
     final_df = add_next_month_rate(final_df, last_rate_column, next_month, next_month_str)
 
     # Save the updated CSV
